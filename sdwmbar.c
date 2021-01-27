@@ -19,9 +19,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-/* Needed for getversion() */
-#include <string.h>
-
 /* Needed for snprintf() */
 #include <stdio.h>
 
@@ -42,7 +39,6 @@
 #include <X11/Xlib.h>
 
 #define STAT_LEN 75
-#define VRSN_LEN 10
 #define TIME_LEN 65
 #define LOAD_LEN 20
 #define AC_LEN 2
@@ -57,22 +53,6 @@ printerr(char *err)
 {
 	fprintf(stderr, "%s\n", err);
 	exit(1);
-}
-
-void
-getversion(char *buff)
-{
-	FILE *fp;
-
-	fp = popen("dwm -v 2>&1", "r");
-	if (!fp)
-		printerr("sdwmbar: no dwm binary found!");
-
-	fgets(buff, VRSN_LEN, fp);
-	fclose(fp);
-
-	/* Remove the trailing newline */
-	buff[strcspn(buff, "\n")] = 0;
 }
 
 void
@@ -175,7 +155,6 @@ main(void)
 	char status[STAT_LEN];
 	char load[LOAD_LEN];
 	char time[TIME_LEN];
-	char version[VRSN_LEN];
 	char ac[AC_LEN];
 	int  batt;
 
@@ -187,9 +166,6 @@ main(void)
 	signal(SIGINT, handle_sigint);
 #endif /* __OpenBSD__ */
 
-	/* Only need to get version once */
-	getversion(version);
-
 	if (!getbatt(&batt))
 		fprintf(stderr, "WARN: No battery was detected.\n");
 
@@ -200,11 +176,11 @@ main(void)
 		/* getbatt() returns 0 if no battery exists */
 		if (getbatt(&batt)) {
 			getac(ac);
-			snprintf(status, STAT_LEN, "%s  L:%s  %s  %s%d%%",
-					version, load, time, ac, batt);
+			snprintf(status, STAT_LEN, "L:%s  %s  %s%d%%",
+					load, time, ac, batt);
 		} else {
-			snprintf(status, STAT_LEN, "%s  L:%s  %s",
-					 version, load, time);
+			snprintf(status, STAT_LEN, "L:%s  %s",
+					 load, time);
 		}
 
 		setstatus(status);
