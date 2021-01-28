@@ -1,3 +1,10 @@
+## Notes from me
+
+Thanks [sakhmatd](https://sakhmatd.ee/) for starting this project that I am
+glad to contribute to. This fork mainly exists for my contributions but there
+is a single difference: I am not so eager to show off my dwm version, so I
+dropped this function from the source code.
+
 ## SDWMBar
 
 A simple statusbar for [dwm](http://dwm.suckless.org).
